@@ -3,6 +3,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,500&family=PT+Sans:wght@400;700&family=PT+Serif:ital@0;1&family=PT+Mono&display=swap">
 <style>
+.work{min-height:max(560px,62vh)!important;font-size:.85rem!important;border:2px dashed var(--line)}
 [hidden]{display:none!important}
 /* Layout: школьная тетрадь — красная линия полей, вкладки, слева текст учебника, справа рисунок/модель на клетчатой бумаге */
 :root{
@@ -367,7 +368,7 @@ document.addEventListener('change',e=>{if(e.target.classList&&e.target.classList
 function solveUI(root,st,P,redraw,work){
   const N=P.steps.length,n=TEACH?N:Math.min(st.shown,N),ansOn=TEACH||st.ans||n>=N;
   const solved=st.tries.some(v=>P.abs!=null?Math.abs(v-P.ans)<=P.abs:close(v,P.ans,P.tol||.01));const last=st.tries[st.tries.length-1];
-  root.innerHTML=(work&&!ansOn&&!TEACH?`<div class="work">${L('Решите задачу в тетради или ручкой прямо здесь, введите ответ и нажмите «Проверить».','Есепті дәптерде немесе осы жерде қаламмен шығарып, жауапты енгізіп, «Тексеру» батырмасын басыңыз.')}</div>`:'')+
+  root.innerHTML=(work?`<div class="work paper-grid">${L('Место для решения: включите ручку ✎ (справа внизу) и решайте прямо здесь. Затем введите ответ и нажмите «Проверить».','Шешуге арналған орын: қаламды ✎ (оң жақ төменде) қосып, осы жерде шешіңіз. Содан кейін жауапты енгізіп, «Тексеру» батырмасын басыңыз.')}</div>`:'')+
     (TEACH?'':`<span class="lbl">${L('Ваш ответ','Сіздің жауабыңыз')}</span><div class="pin"><input class="num" inputmode="decimal" placeholder="${P.ph||'?'}" value="${st.raw!==undefined?st.raw:''}" ${solved?'disabled':''}><span class="m">${P.unit}</span><button class="btn go" ${solved?'disabled':''}>${L('Проверить','Тексеру')}</button></div>`+
     (last===undefined?'':solved?`<p class="fb ok">${L('Верно!','Дұрыс!')} ${st.tries.length===1?L('С первой попытки.','Бірінші әрекеттен.'):''}</p>`:`<p class="fb bad">${(P.trap&&Math.abs(last-P.trap.v)<=(P.abs!=null?P.abs:Math.abs(P.trap.v)*.01))?P.trap.msg:L('Пока неверно. Проверьте вычисления и единицы измерения или откройте подсказку.','Әзірге қате. Есептеулер мен өлшем бірліктерін тексеріңіз немесе кеңесті ашыңыз.')} (${L('попыток','әрекет')}: ${st.tries.length})</p>`))+
     `<ol class="steps" style="margin-top:12px">${P.steps.slice(0,n).map(s=>`<li><div><span class="why">${s.why}</span><span class="mx">${s.mx}</span></div></li>`).join('')}</ol>`+
